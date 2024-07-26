@@ -1,0 +1,38 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Src/McKesson/McKesson.Models/bin
+/Src/McKesson/McKesson.Models/obj
+/Src/McKesson/McKesson.Services/bin/Debug/net7.0
+
+App_Data/
+node_modules/
+artifacts/
+
+# Visual Studio files
+*.user
+*.lock.json
+*.csproj.DotSettings
+.vscode/
+.vs/
+.nuget/
+packages/
+bin/
+obj/
+
+# Optimizely files
+*license.config
+modules/
+
+# OS crap
+.DS_Store
+thumbs.db
+ehthumbs.db
+desktop.ini
+
+# IDEs from JetBrains
+.idea/
+
+
+/**/appsettings.Local.json
