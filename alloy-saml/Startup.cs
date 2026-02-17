@@ -45,14 +45,13 @@ public class Startup
 
         services.Configure<Saml2Configuration>(saml2Configuration =>
         {
-            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
-
+            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);           
             var entityDescriptor = new EntityDescriptor();
             entityDescriptor.ReadIdPSsoDescriptorFromUrl(new Uri(_configuration["Saml2:IdPMetadata"]));
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
                 saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
-                saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);
+                saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);                
             }
             else
             {
@@ -77,7 +76,7 @@ public class Startup
                     o.LoginPath = new PathString("/Auth/Login");
                     o.SlidingExpiration = false;
                     o.Cookie.SameSite = SameSiteMode.Lax;
-                    o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;                    
                 });
         // Required by Wangkanai.Detection
         services.AddDetection();

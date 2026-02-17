@@ -20,6 +20,9 @@ namespace alloy_saml.Controllers
         public AuthController(IOptions<Saml2Configuration> configAccessor)
         {
             config = configAccessor.Value;
+            // Disabling certificate validation is not recommended for production scenarios, but can be useful for testing with self-signed certificates or in development environments.
+            // In production, you should ensure that the certificate used by the Identity Provider (IDP) is valid and trusted.
+            config.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None;
         }
 
         [Route("Login")]

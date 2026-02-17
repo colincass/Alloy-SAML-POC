@@ -3,6 +3,7 @@ using System.Security.Claims;
 
 namespace alloy_saml.Helpers
 {
+    // Only needed in scenarios where additional claims are fetched from an external source or similar
     public static class ClaimsTransform
     {
         public static ClaimsPrincipal Transform(ClaimsPrincipal incomingPrincipal)
@@ -22,10 +23,19 @@ namespace alloy_saml.Helpers
             // All claims
             claims.AddRange(incomingPrincipal.Claims);
 
-            // Or custom claims
-            //claims.AddRange(GetSaml2LogoutClaims(incomingPrincipal));
+            // Or custom claims            
+            claims.AddRange(GetSaml2LogoutClaims(incomingPrincipal));
             //claims.Add(new Claim(ClaimTypes.NameIdentifier, GetClaimValue(incomingPrincipal, ClaimTypes.NameIdentifier)));
-            claims.Add(new Claim(ClaimTypes.Role, "CmsAdmins", ClaimTypes.Role));
+
+            // For this POC we will just add a static role claim, but in a real implementation you would configure roles in the IDP, which can vary by vendor
+            if (incomingPrincipal.Identity.IsAuthenticated)
+            {
+                if (incomingPrincipal.Identity.Name.Equals("admin@example.com", StringComparison.OrdinalIgnoreCase))                
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "CmsAdmins", ClaimTypes.Role));
+                }
+            }
+
             return new ClaimsPrincipal(new ClaimsIdentity(claims, incomingPrincipal.Identity.AuthenticationType, ClaimTypes.NameIdentifier, ClaimTypes.Role)
             {
                 BootstrapContext = ((ClaimsIdentity)incomingPrincipal.Identity).BootstrapContext
@@ -38,7 +48,6 @@ namespace alloy_saml.Helpers
             yield return GetClaim(principal, Saml2ClaimTypes.NameIdFormat);
             yield return GetClaim(principal, Saml2ClaimTypes.SessionIndex);
         }
-
         private static Claim GetClaim(ClaimsPrincipal principal, string claimType)
         {
             return ((ClaimsIdentity)principal.Identity).Claims.Where(c => c.Type == claimType).FirstOrDefault();
